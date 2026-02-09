@@ -1,4 +1,4 @@
-# Canteener by golden pan
+# Canteener by golden pan [TF2-Lua]
 This is a very simple Lua. It will use ANY canteen you currently have when your ammo count reaches 1 or less.
 
 > Use at your own risk and responsibility!
