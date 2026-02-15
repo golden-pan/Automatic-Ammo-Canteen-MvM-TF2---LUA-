@@ -82,10 +82,13 @@ end
 state.enabled = (ammoCfg.enabled == 1)
 
 local UI = {
+
 font = draw.CreateFont("Tahoma", 16, 600),
+font2 = draw.CreateFont("Verdana", 16, 400),
 colors = {
 gold = {255, 215, 0, 255},
 gray = {150, 150, 150, 255},
+textDim = {180, 180, 180, 255},
 background = {15, 15, 15, 230},
 text = {255, 255, 255, 255}
 }
@@ -93,11 +96,12 @@ text = {255, 255, 255, 255}
 
 local BOX_SIZE = 44
 
-local MENU_W, MENU_H = 150, 74
+
+local MENU_W, MENU_H = 168, 82
 
 local function AlphaBox(a)
 if ammoCfg.transparent == 1 then
-return math.max(18, math.floor(a * 0.38))
+return math.max(0, math.floor(a * 0.42))
 end
 return a
 end
@@ -250,7 +254,7 @@ local bHotkey = DrawButton(px+10, py+10, MENU_W-20, 24, label, accent, mx, my, (
 
 local tLabel = (ammoCfg.transparent == 1) and "Transparent: ON" or "Transparent: OFF"
 
-local bTrans = DrawButton(px+10, py+40, MENU_W-20, 24, tLabel, accent, mx, my, (menu.anim or 0))
+local bTrans = DrawButton(px+10, py+44, MENU_W-20, 24, tLabel, accent, mx, my, (menu.anim or 0))
 
 return px, py, MENU_W, MENU_H, bHotkey, bTrans
 end
@@ -444,13 +448,23 @@ clickCandidate = false
 isDragging = false
 end
 
-local accent = state.enabled and UI.colors.gold or UI.colors.gray
+local col = state.enabled and UI.colors.gold or UI.colors.gray
+local txtDim = UI.colors.textDim or {180, 180, 180, 255}
 
 local bg = UI.colors.background
-ColorBox(bg[1], bg[2], bg[3], bg[4])
+
+local bgBase = (ammoCfg.transparent == 1) and 110 or (bg[4] or 230)
+ColorBox(bg[1], bg[2], bg[3], bgBase)
 draw.FilledRect(x, y, x + w, y + h)
 
-ColorBox(accent[1], accent[2], accent[3], accent[4])
+
+local barBase
+if ammoCfg.transparent == 1 then
+    barBase = state.enabled and 107 or 150
+else
+    barBase = 255
+end
+ColorBox(col[1], col[2], col[3], barBase)
 draw.FilledRect(x, y, x + w, y + 2)
 draw.FilledRect(x, y + h - 2, x + w, y + h)
 
@@ -458,7 +472,9 @@ draw.SetFont(UI.font)
 local label = "ammo"
 local tw, th = draw.GetTextSize(label)
 
-ColorBox(accent[1], accent[2], accent[3], accent[4])
+local infoBase = (ammoCfg.transparent == 1) and 150 or 255
+local tCol = state.enabled and UI.colors.gold or txtDim
+ColorBox(tCol[1], tCol[2], tCol[3], infoBase)
 draw.Text(math.floor(x + (w / 2) - (tw / 2)), math.floor(y + (h / 2) - (th / 2)), label)
 
 if menu.open then
